@@ -20,13 +20,31 @@ function isCustomer(customer) {
   });
 }
 
+function isProduct(product) {
+  var fields = [
+    'id',
+    'name',
+    'price',
+    'createdAt',
+    'updatedAt'
+  ];
+  fields.forEach(function(field) {
+    should(product).have.property(field);
+  });
+}
+
 describe('API', function() {
   var server = require('../app');
   var customerUrl = '/api/customers/';
+  var productUrl = '/api/products/';
   var customer = {
     name: 'John Doe',
     address: 'San Francisco, CA',
     phone: '999-999-9999'
+  };
+  var product = {
+    name: 'iPhone',
+    price: 999.00
   };
 
   it('gets all customers', function testGetAllCustomers(done) {
@@ -74,6 +92,54 @@ describe('API', function() {
       .end(function() {
         request(server)
           .get(customerUrl + customer.id)
+          .expect(200, null, done);
+      })
+  });
+
+  it('gets all products', function testGetAllProducts(done) {
+    request(server)
+      .get(productUrl)
+      .expect(function(result) {
+        result.body.forEach(function(product) {
+          isProduct.call(this, product);
+        })
+      })
+      .expect(200, done);
+  });
+
+  it('creates product', function testCreateProduct(done) {
+    request(server)
+      .post(productUrl)
+      .send(product)
+      .expect(function(result) {
+        product.id = result.body.id;
+      })
+      .expect(200, done);
+  });
+
+  it('gets product', function testGetProduct(done) {
+    request(server)
+      .get(productUrl + product.id)
+      .expect(removeTimestamps)
+      .expect(200, product, done);
+  });
+
+  it('updates product', function testPutProduct(done) {
+    product.name = 'iPad';
+    product.price = 499.00;
+    request(server)
+      .put(productUrl + product.id)
+      .send(product)
+      .expect(removeTimestamps)
+      .expect(200, product, done);
+  });
+
+  it('deletes product', function testDeleteProduct(done) {
+    request(server)
+      .delete(productUrl + product.id)
+      .end(function() {
+        request(server)
+          .get(productUrl + product.id)
           .expect(200, null, done);
       })
   });
