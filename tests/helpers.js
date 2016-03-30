@@ -14,11 +14,11 @@ var helpers = {
     return result;
   },
   _isModel: function(model, instance) {
-    model.forEach(function(field) {
+    return model.forEach(function(field) {
       should(instance).have.property(field);
     });
   },
-  _isCustomer: function(customer) {
+  isCustomer: function(customer) {
     var model = [
       'id',
       'name',
@@ -27,35 +27,23 @@ var helpers = {
     ];
     return helpers._isModel(model, customer);
   },
-  isCustomer: function(customer) {
-    return helpers._isCustomer(customer);
-  },
   isProduct: function(product) {
-    return helpers._isProduct(product);
-  },
-  areCustomers: function(customers) {
-    return new Promise(function(resolve) {
-      customers.forEach(function(customer) {
-        helpers.isCustomer(customer);
-      });
-      resolve();
-    });
-  },
-  areProducts: function(customers) {
-    return new Promise(function(resolve) {
-      customers.forEach(function(customer) {
-        helpers.isProduct(customer);
-      });
-      resolve();
-    });
-  },
-  _isProduct: function(product) {
     var model = [
       'id',
       'name',
       'price'
     ];
-    helpers._isModel(model, product);
+    return helpers._isModel(model, product);
+  },
+  areCustomers: function(customers) {
+    return customers.forEach(function(customer) {
+      helpers.isCustomer(customer);
+    });
+  },
+  areProducts: function(customers) {
+    return customers.forEach(function(customer) {
+      helpers.isProduct(customer);
+    });
   }
 };
 

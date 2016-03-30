@@ -8,7 +8,8 @@ var express = require('express'),
 
 sequelize = new Sequelize('sqlite://' + path.join(__dirname, 'invoices.sqlite'), {
   dialect: 'sqlite',
-  storage: path.join(__dirname, 'invoices.sqlite')
+  storage: path.join(__dirname, 'invoices.sqlite'),
+  logging: function() {}
 });
 
 Customer = sequelize.define('customers', { 

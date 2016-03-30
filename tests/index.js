@@ -13,9 +13,19 @@ describe('API', function() {
     name: 'John Doe',
     address: 'San Francisco, CA',
     phone: '999-999-9999'
-  }
+  };
 
-  it('gets customers', function() {
+  var invoice = {
+    discount: 10,
+    total: 100
+  };
+
+  var product = {
+    name: 'iPhone',
+    price: 999
+  };
+
+  it('gets all customers', function() {
     return customerAPI
       .get()
       .then(helpers.areCustomers);
@@ -27,7 +37,7 @@ describe('API', function() {
       .then(function(result) {
         customer.id = result.id;
         return should(helpers.removeTimestamps(result)).be.eql(customer);
-      })
+      });
   });
 
   it('gets customer', function getUserAndCheckHim() {
@@ -38,18 +48,18 @@ describe('API', function() {
       });
   });
 
+  customer.name = 'Jake Doe';
+  customer.address = 'Los Angeles, CA';
+  customer.phone = '888-888-8888';
+
   it('updates customer', function() {
-    customer.name = 'Jake Doe';
-    customer.address = 'Los Angeles, CA';
-    customer.phone = '888-888-8888';
     return customerAPI
       .update(customer.id, customer)
       .then(function() {
-        return customerAPI
-          .get(customer.id)
-          .then(function(result){
-            return should(helpers.removeTimestamps(result)).be.eql(customer);
-          })
+        return customerAPI.get(customer.id)
+      })
+      .then(function(result){
+        return should(helpers.removeTimestamps(result)).be.eql(customer);
       });
   });
 
@@ -57,11 +67,10 @@ describe('API', function() {
     return customerAPI
       .remove(customer.id)
       .then(function() {
-        return customerAPI
-          .get(customer.id)
-          .then(function(result){
-            return should(result).be.eql(null);
-          })
+        return customerAPI.get(customer.id)
+      })
+      .then(function(result){
+        return should(result).be.eql(null);
       });
   });
 
