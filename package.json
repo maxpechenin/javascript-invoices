@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "test": "mocha -R spec tests/test"
+    "test": "mocha -R spec tests/index"
   },
   "dependencies": {
     "body-parser": "1.15.0",
