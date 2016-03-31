@@ -29,7 +29,6 @@ var commonAPI = {
 
 var APIGenerator = function(server, url) {
   return {
-    url: url,
     get: commonAPI.get.bind(this, server, url),
     create: commonAPI.post.bind(this, server, url),
     update: commonAPI.put.bind(this, server, url),

@@ -176,7 +176,7 @@ app.route('/api/products')
     })
   })
   .post(function(req, res) {
-    var product = Product.build(_.pick(req.body, ['name', 'address', 'phone']));
+    var product = Product.build(_.pick(req.body, ['name', 'price']));
     product.save().then(function(product){
       res.json(product);
     });
@@ -190,7 +190,7 @@ app.route('/api/products/:product_id')
   }) 
   .put(function(req, res) {
     Product.findById(req.params.product_id).then(function(product) {
-      product.update(_.pick(req.body, ['name', 'address', 'phone'])).then(function(product) {
+      product.update(_.pick(req.body, ['name', 'price'])).then(function(product) {
         res.json(product);
       });
     });

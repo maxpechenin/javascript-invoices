@@ -2,14 +2,16 @@ var should = require('should');
 
 var helpers = {
   removeTimestamps: function removeTimestamps(result) {
-    if (result instanceof Array) {
-      result.forEach(function(item, i) {
-        delete result[i].createdAt;
-        delete result[i].updatedAt;
-      })
-    } else {
-      delete result.createdAt;
-      delete result.updatedAt;
+    if (result) {
+      if (result instanceof Array) {
+        result.forEach(function(item, i) {
+          delete result[i].createdAt;
+          delete result[i].updatedAt;
+        })
+      } else {
+        delete result.createdAt;
+        delete result.updatedAt;
+      }
     }
     return result;
   },
@@ -35,6 +37,14 @@ var helpers = {
     ];
     return helpers._isModel(model, product);
   },
+  isInvoice: function(invoice) {
+    var model = [
+      'customer_id',
+      'discount',
+      'total'
+    ];
+    return helpers._isModel(model, invoice);
+  },
   areCustomers: function(customers) {
     return customers.forEach(function(customer) {
       helpers.isCustomer(customer);
@@ -44,6 +54,20 @@ var helpers = {
     return customers.forEach(function(customer) {
       helpers.isProduct(customer);
     });
+  },
+  areInvoices: function(invoices) {
+    return invoices.forEach(function(invoice) {
+      helpers.isInvoice(invoice);
+    });
+  },
+  getByIdAndCompare: function(API, id, instance) {
+    return new Promise(function(resolve){
+      API.get(id)
+        .then(function(result){
+          should(helpers.removeTimestamps(result)).be.eql(instance);
+          resolve();
+        })
+    })
   }
 };
 
